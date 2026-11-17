@@ -1,0 +1,19 @@
+##1. El flujo de una petición en esta arquitectura
+
+   app.js => routes => middleware/validation => controllers => services => models => config(MongoDB)
+
+## 2. El orden por donde empezar a picar código
+
+    2.1 - CONFIG (config/db_mongo.js): El archivo que abre la conexión con MongoDB mediante Mongoose.
+
+    2.2 - MODELS (models/): Los esquemas de Mongoose (Schema y model). Aquí defines la estructura que tendrán los documentos en la BBDD.
+
+    2.3 - SERVICES (services/): Donde metes las operaciones puras de Mongoose (Product.find(), Product.create(), etc.). Aquí es donde antes tenías tus Queries de SQL.
+
+    2.4 - CONTROLLERS (controllers/): Reciben el req y el res, llaman al servicio correspondiente para pedir o guardar datos, y devuelven el JSON (res.status(200).json(...)).
+
+    2.5 - VALIDATION (validation/ - opcional según el ejercicio): Los esquemas de validación (por ejemplo, con express-validator o Joi) para asegurar que los datos que llegan por el body son correctos antes de tocar el controlador.
+
+    2.6 - RUTAS (routes/): Unen la URL (ej. /api/products), meten el middleware de validación si lo hay, y llaman al controlador.
+
+    2.7 - App (app.js): El archivo principal que une todo y arranca el servidor con app.listen().
